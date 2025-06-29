@@ -1,34 +1,72 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background: #ffe6f0;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #fff0f5;
+  color: #333;
 }
 
 header {
-  background: linear-gradient(45deg, #ff69b4, #ff1493);
+  background-color: #ffb6c1;
   padding: 20px;
-  color: white;
   text-align: center;
-  border-radius: 10px;
 }
 
-button {
-  margin: 5px;
-  padding: 10px 20px;
-  background-color: #ff85a2;
+header h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.5em;
+  color: #d63384;
+  margin: 0;
+}
+
+main {
+  padding: 20px;
+  text-align: center;
+}
+
+.servicos h2 {
+  color: #c71585;
+  font-size: 1.8em;
+  margin-bottom: 15px;
+}
+
+.servicos ul {
+  list-style: none;
+  padding: 0;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.servicos ul li {
+  background-color: #ffe4e1;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 400px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.botao-agendar {
+  display: inline-block;
+  background-color: #ff69b4;
   color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #ff4d6d;
+.botao-agendar:hover {
+  background-color: #e754a0;
 }
 
-input {
-  padding: 8px;
-  width: 200px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+footer {
+  background-color: #ffe4e1;
+  text-align: center;
+  padding: 15px;
+  margin-top: 30px;
+  font-size: 0.9em;
+  color: #555;
 }
