@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gabriela Castagna Unhas 💅</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -13,44 +14,57 @@
   </header>
 
   <main>
-    
-      <div class="servico">
-  <img src="img/icon-mao.png" alt="Mão" />
-  <h3>Mão</h3>
-  <p>R$ 40,00</p>
-</div>
+    <section id="servicos">
+      <h2>Escolha um Serviço:</h2>
+      <div class="servico" onclick="escolherServico('Mão')">
+        <img src="img/icon-mao.png" alt="Mão">
+        <h3>Mão</h3>
+        <p>R$ 40,00</p>
+      </div>
+      <div class="servico" onclick="escolherServico('Pé')">
+        <img src="img/icon-pe.png" alt="Pé">
+        <h3>Pé</h3>
+        <p>R$ 45,00</p>
+      </div>
+      <div class="servico" onclick="escolherServico('Pé e Mão')">
+        <img src="img/icon-pe-mao.png" alt="Pé e Mão">
+        <h3>Pé e Mão</h3>
+        <p>R$ 70,00</p>
+      </div>
+      <div class="servico" onclick="escolherServico('Blindagem')">
+        <img src="img/icon-blindagem.png" alt="Blindagem">
+        <h3>Blindagem</h3>
+        <p>R$ 80,00</p>
+      </div>
+      <div class="servico" onclick="escolherServico('Esmaltação em Gel')">
+        <img src="img/icon-esmalte-gel.png" alt="Esmaltação em Gel">
+        <h3>Esmaltação em Gel</h3>
+        <p>R$ 70,00</p>
+      </div>
+      <div class="servico" onclick="escolherServico('Spa dos Pés')">
+        <img src="img/icon-spa-pes.png" alt="Spa dos Pés">
+        <h3>Spa dos Pés</h3>
+        <p>R$ 65,00</p>
+      </div>
+    </section>
 
-<div class="servico">
-  <img src="img/icon-pe.png" alt="Pé" />
-  <h3>Pé</h3>
-  <p>R$ 45,00</p>
-</div>
+    <section id="horarios" style="display:none;">
+      <h2>Escolha o Horário:</h2>
+      <input type="text" id="nomeCliente" placeholder="Digite seu nome" />
+      <div class="botoes-horarios">
+        <button onclick="selecionarHorario('09:00')">09:00</button>
+        <button onclick="selecionarHorario('10:00')">10:00</button>
+        <button onclick="selecionarHorario('11:00')">11:00</button>
+        <button onclick="selecionarHorario('13:00')">13:00</button>
+        <button onclick="selecionarHorario('14:00')">14:00</button>
+        <button onclick="selecionarHorario('15:00')">15:00</button>
+      </div>
+    </section>
 
-<div class="servico">
-  <img src="img/icon-pe-mao.png" alt="Pé e Mão" />
-  <h3>Pé e Mão</h3>
-  <p>R$ 70,00</p>
-</div>
-
-<div class="servico">
-  <img src="img/icon-blindagem.png" alt="Blindagem" />
-  <h3>Blindagem</h3>
-  <p>R$ 80,00</p>
-</div>
-
-<div class="servico">
-  <img src="img/icon-esmalte-gel.png" alt="Esmaltação em Gel" />
-  <h3>Esmaltação em Gel</h3>
-  <p>R$ 70,00</p>
-</div>
-
-<div class="servico">
-  <img src="img/icon-spa-pes.png" alt="Spa dos Pés" />
-  <h3>Spa dos Pés</h3>
-  <p>R$ 65,00</p>
-</div>
-
-      <a href="https://seulinkdeagendamento.com" class="botao-agendar" target="_blank">Agendar Horário</a>
+    <section id="confirmacao" style="display:none;">
+      <h2>✨ Agendamento Confirmado! ✨</h2>
+      <p id="resumo"></p>
+      <a href="index.html" class="botao-agendar">Voltar</a>
     </section>
   </main>
 
@@ -59,3 +73,4 @@
   </footer>
 </body>
 </html>
+
