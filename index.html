@@ -2,62 +2,31 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gabriela Castagna Unhas 💅</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
   <header>
     <h1>Gabriela Castagna Unhas 💅</h1>
   </header>
 
-  <div id="servicos">
-    <h2>Escolha um Serviço:</h2>
-    <button onclick="escolherServico('Mão')">Mão</button>
-    <button onclick="escolherServico('Pé')">Pé</button>
-    <button onclick="escolherServico('Pé e Mão')">Pé e Mão</button>
-    <button onclick="escolherServico('Blindagem')">Blindagem</button>
-    <button onclick="escolherServico('Esmaltação em Gel')">Esmaltação em Gel</button>
-  </div>
+  <main>
+    <section class="servicos">
+      <h2>Escolha um Serviço:</h2>
+      <ul>
+        <li>Manicure Simples - R$20</li>
+        <li>Manicure com Esmaltação em Gel - R$35</li>
+        <li>Francesinha - R$25</li>
+        <li>Aplicação de Películas - R$15</li>
+      </ul>
+      <a href="https://seulinkdeagendamento.com" class="botao-agendar" target="_blank">Agendar Horário</a>
+    </section>
+  </main>
 
-  <div id="horarios" style="display:none;">
-    <h2>Escolha um Horário:</h2>
-    <p>
-      <label for="nomeCliente">Seu nome:</label><br />
-      <input type="text" id="nomeCliente" placeholder="Digite seu nome" />
-    </p>
-    <button onclick="selecionarHorario('09:00')">09:00</button>
-    <button onclick="selecionarHorario('10:00')">10:00</button>
-    <button onclick="selecionarHorario('11:00')">11:00</button>
-    <button onclick="selecionarHorario('12:00')">12:00</button>
-    <button onclick="selecionarHorario('13:00')">13:00</button>
-    <button onclick="selecionarHorario('14:00')">14:00</button>
-    <button onclick="selecionarHorario('15:00')">15:00</button>
-    <button onclick="selecionarHorario('16:00')">16:00</button>
-    <button onclick="selecionarHorario('17:00')">17:00</button>
-    <button onclick="selecionarHorario('18:00')">18:00</button>
-    <button onclick="selecionarHorario('19:00')">19:00</button>
-    <button onclick="selecionarHorario('20:00')">20:00</button>
-  </div>
-
-  <div id="confirmacao" style="display:none;">
-    <h2>Confirmação:</h2>
-    <p id="resumo"></p>
-  </div>
-
-  <div id="lista-agendamentos">
-    <h2>Agendamentos Realizados:</h2>
-    <ul id="itens-agendados"></ul>
-    <button onclick="mostrarTodosAgendamentos()">Ver Todos os Agendamentos</button>
-    <button onclick="limparAgendamentos()">Limpar Todos os Agendamentos</button>
-  </div>
-
-  <div id="tela-agendamentos" style="display:none;">
-    <h2>Lista de Todos os Agendamentos:</h2>
-    <ul id="todos-agendamentos"></ul>
-    <button onclick="voltarParaInicio()">Voltar para Início</button>
-  </div>
-
+  <footer>
+    <p>&copy; 2025 Gabriela Castagna 💖</p>
+  </footer>
 </body>
 </html>
