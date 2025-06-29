@@ -70,3 +70,20 @@ footer {
   font-size: 0.9em;
   color: #555;
 }
+.confirmacao {
+  text-align: center;
+  margin-top: 100px;
+  padding: 20px;
+}
+
+.confirmacao h1 {
+  font-size: 2em;
+  color: #d63384;
+  margin-bottom: 20px;
+}
+
+.confirmacao p {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 15px;
+}
