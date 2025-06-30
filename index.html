@@ -50,7 +50,11 @@
 
     <section id="horarios" style="display:none;">
       <h2>Escolha o Horário:</h2>
-      <input type="text" id="nomeCliente" placeholder="Digite seu nome" />
+      <input type="text" id="nomeCliente" placeholder="Digite seu nome" required />
+
+      <label for="dataAgendamento">Escolha a data:</label>
+      <input type="date" id="dataAgendamento" required />
+
       <div class="botoes-horarios">
         <button onclick="selecionarHorario('09:00')">09:00</button>
         <button onclick="selecionarHorario('10:00')">10:00</button>
@@ -73,4 +77,6 @@
   </footer>
 </body>
 </html>
+
+ 
 
