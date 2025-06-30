@@ -1,245 +1,86 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Agendamento Gabriela Unhas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agendamento - Gabriela Castagna</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fff0f5;
+      max-width: 400px;
+      margin: 40px auto;
       padding: 20px;
-      max-width: 600px;
-      margin: auto;
-      text-align: center;
+      background: #fff0f5;
+      border-radius: 10px;
     }
     h1 {
+      text-align: center;
       color: #c71585;
     }
-    #calendario button {
-      margin: 3px;
-      padding: 8px 12px;
-      border: none;
+    form > * {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 1em;
+    }
+    input, select, button {
+      padding: 10px;
       border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #calendario button:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-    form {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-    }
-    form input, form select, form button {
-      padding: 8px 10px;
-      width: 80%;
-      font-size: 1rem;
-      border-radius: 8px;
       border: 1px solid #ccc;
     }
-    form button {
+    button {
       background-color: #c71585;
       color: white;
       border: none;
-      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-weight: bold;
     }
-    form button:hover {
-      background-color: #a10e62;
-    }
-    #lista-agendamentos {
-      margin-top: 30px;
-      text-align: left;
-      padding: 0;
-      list-style: none;
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background: white;
-    }
-    #lista-agendamentos li {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-    }
-    #lista-agendamentos li:last-child {
-      border-bottom: none;
+    button:hover {
+      background-color: #b01476;
     }
   </style>
 </head>
 <body>
 
-  <h1>Agendamento Gabriela Unhas</h1>
+  <h1>Agende seu horário 💅</h1>
 
-  <h2>Calendário de Folgas</h2>
-  <div id="calendario"></div>
-
-  <h2>Faça seu Agendamento</h2>
   <form id="form-agendamento">
-    <input type="text" name="nome" placeholder="Seu nome" required />
-    <select name="servico" required>
-      <option value="" disabled selected>Selecione um serviço</option>
+    <input type="text" id="nome" placeholder="Seu nome" required />
+    <select id="servico" required>
+      <option value="">-- Escolha o serviço --</option>
       <option value="Mão">Mão</option>
       <option value="Pé">Pé</option>
-      <option value="Pé + Mão">Pé + Mão</option>
-      <option value="Esmalte em Gel">Esmalte em Gel</option>
+      <option value="Pé e Mão">Pé e Mão</option>
       <option value="Blindagem">Blindagem</option>
-      <option value="Spa dos Pés">Spa dos Pés</option>
+      <option value="Esmalte em Gel">Esmalte em Gel</option>
+      <option value="SPA dos Pés">SPA dos Pés</option>
     </select>
-    <input type="date" name="data" required />
-    <input type="time" name="hora" required />
+    <input type="date" id="data" required />
+    <select id="horario" required>
+      <option value="">-- Escolha o horário --</option>
+      <option value="08:00">08:00</option>
+      <option value="08:30">08:30</option>
+      <option value="09:00">09:00</option>
+      <option value="09:30">09:30</option>
+      <option value="10:00">10:00</option>
+      <option value="10:30">10:30</option>
+      <option value="11:00">11:00</option>
+      <option value="11:30">11:30</option>
+      <option value="12:00">12:00</option>
+      <option value="12:30">12:30</option>
+      <option value="13:00">13:00</option>
+      <option value="13:30">13:30</option>
+      <option value="14:00">14:00</option>
+      <option value="14:30">14:30</option>
+      <option value="15:00">15:00</option>
+      <option value="15:30">15:30</option>
+      <option value="16:00">16:00</option>
+      <option value="16:30">16:30</option>
+      <option value="17:00">17:00</option>
+    </select>
     <button type="submit">Agendar</button>
   </form>
 
-  <h2>Agendamentos Confirmados</h2>
-  <ul id="lista-agendamentos">
-    <li>Carregando agendamentos...</li>
-  </ul>
-
-  <script>
-    const diasFolgaKey = 'diasFolga';
-    const agendamentosKey = 'agendamentos';
-
-    function carregarFolgas() {
-      const folgas = localStorage.getItem(diasFolgaKey);
-      return folgas ? JSON.parse(folgas) : [];
-    }
-
-    function salvarFolgas(folgas) {
-      localStorage.setItem(diasFolgaKey, JSON.stringify(folgas));
-    }
-
-    function adicionarFolga(data) {
-      let folgas = carregarFolgas();
-      if (!folgas.includes(data)) {
-        folgas.push(data);
-        salvarFolgas(folgas);
-        alert(`Folga adicionada para o dia ${data}`);
-      } else {
-        alert('Esse dia já está marcado como folga.');
-      }
-      atualizarCalendario();
-    }
-
-    function carregarAgendamentos() {
-      const agendamentos = localStorage.getItem(agendamentosKey);
-      return agendamentos ? JSON.parse(agendamentos) : [];
-    }
-
-    function salvarAgendamentos(agendamentos) {
-      localStorage.setItem(agendamentosKey, JSON.stringify(agendamentos));
-    }
-
-    function adicionarAgendamento(agendamento) {
-      let agendamentos = carregarAgendamentos();
-      let folgas = carregarFolgas();
-
-      if (folgas.includes(agendamento.data)) {
-        alert('Não é possível agendar neste dia, pois é folga.');
-        return false;
-      }
-
-      let conflito = agendamentos.some(a => a.data === agendamento.data && a.hora === agendamento.hora);
-      if (conflito) {
-        alert('Horário já está ocupado.');
-        return false;
-      }
-
-      agendamentos.push(agendamento);
-      salvarAgendamentos(agendamentos);
-      alert('Agendamento confirmado!');
-      atualizarListaAgendamentos();
-      return true;
-    }
-
-    function atualizarListaAgendamentos() {
-      const lista = document.getElementById('lista-agendamentos');
-      if (!lista) return;
-
-      const agendamentos = carregarAgendamentos();
-      lista.innerHTML = '';
-
-      if (agendamentos.length === 0) {
-        lista.innerHTML = '<li>Não há agendamentos.</li>';
-        return;
-      }
-
-      agendamentos.forEach(a => {
-        const item = document.createElement('li');
-        item.textContent = `${a.nome} - ${a.servico} - ${a.data} às ${a.hora}`;
-        lista.appendChild(item);
-      });
-    }
-
-    function atualizarCalendario() {
-      const calendario = document.getElementById('calendario');
-      if (!calendario) return;
-
-      calendario.innerHTML = '';
-      const folgas = carregarFolgas();
-      const hoje = new Date();
-
-      for (let i = 0; i < 30; i++) {
-        const dia = new Date();
-        dia.setDate(hoje.getDate() + i);
-        const diaStr = dia.toISOString().split('T')[0];
-
-        const btn = document.createElement('button');
-        btn.textContent = diaStr;
-        btn.style.margin = '3px';
-
-        if (folgas.includes(diaStr)) {
-          btn.style.backgroundColor = '#f08080'; // vermelho claro para folga
-          btn.disabled = true;
-          btn.title = 'Folga';
-        } else {
-          btn.style.backgroundColor = '#90ee90'; // verde claro para disponível
-          btn.disabled = false;
-          btn.title = 'Disponível';
-          btn.onclick = () => {
-            if (confirm(`Deseja adicionar folga para o dia ${diaStr}?`)) {
-              adicionarFolga(diaStr);
-            }
-          };
-        }
-        calendario.appendChild(btn);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      atualizarCalendario();
-      atualizarListaAgendamentos();
-
-      const form = document.getElementById('form-agendamento');
-      if (form) {
-        form.addEventListener('submit', (e) => {
-          e.preventDefault();
-
-          const nome = form.elements['nome'].value.trim();
-          const servico = form.elements['servico'].value;
-          const data = form.elements['data'].value;
-          const hora = form.elements['hora'].value;
-
-          if (!nome || !data || !hora || !servico) {
-            alert('Preencha todos os campos!');
-            return;
-          }
-
-          const sucesso = adicionarAgendamento({ nome, servico, data, hora });
-          if (sucesso) {
-            form.reset();
-          }
-        });
-      }
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
-
-
