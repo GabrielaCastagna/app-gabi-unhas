@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus Agendamentos - Gabriela Castagna 💅</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .agendamento {
+      background: #fff;
+      padding: 1em;
+      margin-bottom: 1em;
+      border: 2px solid #f2d3e2;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📋 Meus Agendamentos</h1>
+  </header>
+
+  <main>
+    <section id="lista-agendamentos">
+      <p>Carregando agendamentos...</p>
+    </section>
+    <div style="text-align: center; margin: 2em 0;">
+      <a href="index.html" class="botao-agendar">⬅️ Voltar para página inicial</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Gabriela Castagna 💖</p>
+  </footer>
+
+  <script>
+    const lista = document.getElementById("lista-agendamentos");
+    const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+    if (agendamentos.length === 0) {
+      lista.innerHTML = "<p>Nenhum agendamento encontrado.</p>";
+    } else {
+      lista.innerHTML = "";
+      agendamentos.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "agendamento";
+        div.innerHTML = `
+          <strong>#${index + 1}</strong><br>
+          <strong>Nome:</strong> ${item.nome}<br>
+          <strong>Serviço:</strong> ${item.servico}<br>
+          <strong>Data:</strong> ${item.data}<br>
+          <strong>Horário:</strong> ${item.horario}
+        `;
+        lista.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
