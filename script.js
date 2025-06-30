@@ -1,78 +1,85 @@
-function escolherServico(servico) {
-  document.getElementById('servicos').style.display = 'none';
-  document.getElementById('horarios').style.display = 'block';
-  // Salva o serviço escolhido para confirmação depois
-  sessionStorage.setItem('servicoEscolhido', servico);
+// Lista de serviços com duração em minutos
+const servicos = {
+  "Mão": 60,              // 1 hora
+  "Pé": 60,               // 1 hora
+  "Pé e Mão": 105,        // 1h45
+  "Blindagem": 75,        // 1h15
+  "Esmalte em Gel": 75,   // 1h15
+  "SPA dos Pés": 40       // 40 minutos
+};
+
+// Carrega os agendamentos do localStorage
+let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+// Gera todos os horários que precisam ser bloqueados com base na duração
+function gerarHorariosBloqueados(horarioInicial, duracao) {
+  const bloqueados = [];
+  let [hora, minuto] = horarioInicial.split(":").map(Number);
+  let totalMinutos = hora * 60 + minuto;
+  const fimMinutos = totalMinutos + duracao;
+
+  while (totalMinutos < fimMinutos) {
+    const h = Math.floor(totalMinutos / 60).toString().padStart(2, "0");
+    const m = (totalMinutos % 60).toString().padStart(2, "0");
+    bloqueados.push(`${h}:${m}`);
+    totalMinutos += 30; // Avança em blocos de 30 minutos
+  }
+
+  return bloqueados;
 }
 
-function selecionarHorario(horario) {
-  const nome = document.getElementById('nomeCliente').value.trim();
-  if (!nome) {
-    alert('Por favor, digite seu nome antes de escolher o horário.');
+// Verifica se há conflito com horários já ocupados no mesmo dia
+function temConflito(horariosNovos, dataSelecionada) {
+  return agendamentos.some(ag => {
+    return ag.data === dataSelecionada && ag.horariosBloqueados.some(h => horariosNovos.includes(h));
+  });
+}
+
+// Salva o agendamento
+function salvarAgendamento(nome, servico, horario, data) {
+  const duracao = servicos[servico];
+  const horariosBloqueados = gerarHorariosBloqueados(horario, duracao);
+
+  if (temConflito(horariosBloqueados, data)) {
+    alert("Esse horário está em conflito com outro agendamento.");
     return;
   }
 
-  const servico = sessionStorage.getItem('servicoEscolhido');
-  const resumo = `Cliente: ${nome} | Serviço: ${servico} | Horário: ${horario}`;
+  const novoAgendamento = {
+    nome,
+    servico,
+    horario,
+    data,
+    horariosBloqueados
+  };
 
-  // Mostrar confirmação
-  document.getElementById('horarios').style.display = 'none';
-  const confirmacao = document.getElementById('confirmacao');
-  confirmacao.style.display = 'block';
-  document.getElementById('resumo').innerText = resumo;
+  agendamentos.push(novoAgendamento);
+  localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
 
-  // Salvar agendamento no localStorage
-  let agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
-  agendamentos.push(resumo);
-  localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
-
-  // Atualizar lista de agendamentos na página
-  atualizarListaAgendamentos();
+  alert("Agendamento confirmado com sucesso!");
+  window.location.href = "confirmacao.html"; // redireciona após salvar
 }
 
-function atualizarListaAgendamentos() {
-  const itensAgendados = document.getElementById('itens-agendados');
-  itensAgendados.innerHTML = '';
-  const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
-  agendamentos.forEach((item) => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    itensAgendados.appendChild(li);
-  });
-}
+// Quando a página carregar, conecta o formulário
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("form-agendamento");
 
-function mostrarTodosAgendamentos() {
-  document.getElementById('lista-agendamentos').style.display = 'none';
-  document.getElementById('tela-agendamentos').style.display = 'block';
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-  const todosAgendamentos = document.getElementById('todos-agendamentos');
-  todosAgendamentos.innerHTML = '';
+      const nome = document.getElementById("nome").value;
+      const servico = document.getElementById("servico").value;
+      const horario = document.getElementById("horario").value;
+      const data = document.getElementById("data").value;
 
-  const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
-  agendamentos.forEach((item) => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    todosAgendamentos.appendChild(li);
-  });
-}
+      if (!nome || !servico || !horario || !data) {
+        alert("Preencha todos os campos!");
+        return;
+      }
 
-function limparAgendamentos() {
-  if (confirm('Tem certeza que deseja limpar todos os agendamentos?')) {
-    localStorage.removeItem('agendamentos');
-    atualizarListaAgendamentos();
-    alert('Agendamentos limpos com sucesso!');
+      salvarAgendamento(nome, servico, horario, data);
+    });
   }
-}
+});
 
-function voltarParaInicio() {
-  document.getElementById('tela-agendamentos').style.display = 'none';
-  document.getElementById('lista-agendamentos').style.display = 'block';
-  document.getElementById('servicos').style.display = 'block';
-  document.getElementById('confirmacao').style.display = 'none';
-  document.getElementById('horarios').style.display = 'none';
-}
-
-// Atualizar lista quando a página carregar
-window.onload = function () {
-  atualizarListaAgendamentos();
-};
