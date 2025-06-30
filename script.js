@@ -1,25 +1,44 @@
+let servicoSelecionado = "";
+let horarioSelecionado = "";
+
 function escolherServico(servico) {
-  document.getElementById('servicos').style.display = 'none';
-  document.getElementById('horarios').style.display = 'block';
-  sessionStorage.setItem('servicoEscolhido', servico);
+  servicoSelecionado = servico;
+  document.getElementById("servicos").style.display = "none";
+  document.getElementById("horarios").style.display = "block";
 }
 
 function selecionarHorario(horario) {
-  const nome = document.getElementById('nomeCliente').value.trim();
-  if (!nome) {
-    alert('Por favor, digite seu nome antes de escolher o horário.');
+  horarioSelecionado = horario;
+
+  const nomeCliente = document.getElementById("nomeCliente").value.trim();
+  const dataAgendamento = document.getElementById("dataAgendamento").value;
+
+  if (!nomeCliente || !dataAgendamento) {
+    alert("Por favor, preencha seu nome e escolha a data.");
     return;
   }
 
-  const servico = sessionStorage.getItem('servicoEscolhido');
-  const resumo = `Cliente: ${nome} | Serviço: ${servico} | Horário: ${horario}`;
+  const agendamento = {
+    nome: nomeCliente,
+    servico: servicoSelecionado,
+    data: dataAgendamento,
+    horario: horarioSelecionado,
+  };
 
-  document.getElementById('horarios').style.display = 'none';
-  document.getElementById('confirmacao').style.display = 'block';
-  document.getElementById('resumo').innerText = resumo;
+  // Salvar no localStorage
+  let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+  agendamentos.push(agendamento);
+  localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
 
-  let agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
-  agendamentos.push(resumo);
-  localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+  // Mostrar confirmação
+  const resumo = `
+    <strong>Nome:</strong> ${agendamento.nome}<br>
+    <strong>Serviço:</strong> ${agendamento.servico}<br>
+    <strong>Data:</strong> ${agendamento.data}<br>
+    <strong>Horário:</strong> ${agendamento.horario}
+  `;
+  document.getElementById("resumo").innerHTML = resumo;
+
+  document.getElementById("horarios").style.display = "none";
+  document.getElementById("confirmacao").style.display = "block";
 }
-
