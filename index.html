@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agendamento - Gabriela Castagna</title>
+  <title>Agendamento com Folgas - Gabriela Castagna</title>
+
+  <!-- Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -55,7 +59,7 @@
       <option value="Esmalte em Gel">Esmalte em Gel</option>
       <option value="SPA dos Pés">SPA dos Pés</option>
     </select>
-    <input type="date" id="data" required />
+    <input type="text" id="data" placeholder="Escolha a data" required />
     <select id="horario" required>
       <option value="">-- Escolha o horário --</option>
       <option value="08:00">08:00</option>
@@ -81,6 +85,8 @@
     <button type="submit">Agendar</button>
   </form>
 
+  <!-- Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="script.js"></script>
 </body>
 </html>
