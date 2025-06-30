@@ -1,67 +1,146 @@
-let servicoSelecionado = "";
-let horarioSelecionado = "";
+// --- Variáveis globais ---
+const diasFolgaKey = 'diasFolga';
+const agendamentosKey = 'agendamentos';
 
-function escolherServico(servico) {
-  servicoSelecionado = servico;
-  document.getElementById("servicos").style.display = "none";
-  document.getElementById("horarios").style.display = "block";
+// --- Função para carregar folgas do localStorage ---
+function carregarFolgas() {
+  const folgas = localStorage.getItem(diasFolgaKey);
+  return folgas ? JSON.parse(folgas) : [];
 }
 
-function selecionarHorario(horario) {
-  horarioSelecionado = horario;
+// --- Função para salvar folgas no localStorage ---
+function salvarFolgas(folgas) {
+  localStorage.setItem(diasFolgaKey, JSON.stringify(folgas));
+}
 
-  const nomeCliente = document.getElementById("nomeCliente").value.trim();
-  const dataAgendamento = document.getElementById("dataAgendamento").value;
+// --- Função para adicionar folga ---
+function adicionarFolga(data) {
+  let folgas = carregarFolgas();
+  if (!folgas.includes(data)) {
+    folgas.push(data);
+    salvarFolgas(folgas);
+    alert(`Folga adicionada para o dia ${data}`);
+  } else {
+    alert('Esse dia já está marcado como folga.');
+  }
+  atualizarCalendario();
+}
 
-  if (!nomeCliente || !dataAgendamento) {
-    alert("Por favor, preencha seu nome e escolha a data.");
+// --- Função para carregar agendamentos ---
+function carregarAgendamentos() {
+  const agendamentos = localStorage.getItem(agendamentosKey);
+  return agendamentos ? JSON.parse(agendamentos) : [];
+}
+
+// --- Função para salvar agendamentos ---
+function salvarAgendamentos(agendamentos) {
+  localStorage.setItem(agendamentosKey, JSON.stringify(agendamentos));
+}
+
+// --- Função para adicionar agendamento ---
+function adicionarAgendamento(agendamento) {
+  let agendamentos = carregarAgendamentos();
+  // Verifica se o dia não é folga
+  let folgas = carregarFolgas();
+  if (folgas.includes(agendamento.data)) {
+    alert('Não é possível agendar neste dia, pois é folga.');
+    return false;
+  }
+  // Verifica conflito de horário
+  let conflito = agendamentos.some(a => a.data === agendamento.data && a.hora === agendamento.hora);
+  if (conflito) {
+    alert('Horário já está ocupado.');
+    return false;
+  }
+  agendamentos.push(agendamento);
+  salvarAgendamentos(agendamentos);
+  alert('Agendamento confirmado!');
+  atualizarListaAgendamentos();
+  return true;
+}
+
+// --- Função para atualizar a lista de agendamentos na tela ---
+function atualizarListaAgendamentos() {
+  const lista = document.getElementById('lista-agendamentos');
+  if (!lista) return;
+
+  const agendamentos = carregarAgendamentos();
+  lista.innerHTML = '';
+
+  if (agendamentos.length === 0) {
+    lista.innerHTML = '<p>Não há agendamentos.</p>';
     return;
   }
 
-  const agendamento = {
-    nome: nomeCliente,
-    servico: servicoSelecionado,
-    data: dataAgendamento,
-    horario: horarioSelecionado,
-  };
-
-  // Salvar no localStorage
-  let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
-  agendamentos.push(agendamento);
-  localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
-
-  // Mostrar confirmação
-  const resumo = `
-    <strong>Nome:</strong> ${agendamento.nome}<br>
-    <strong>Serviço:</strong> ${agendamento.servico}<br>
-    <strong>Data:</strong> ${agendamento.data}<br>
-    <strong>Horário:</strong> ${agendamento.horario}
-  `;
-  document.getElementById("resumo").innerHTML = resumo;
-
-  document.getElementById("horarios").style.display = "none";
-  document.getElementById("confirmacao").style.display = "block";
+  agendamentos.forEach(a => {
+    const item = document.createElement('li');
+    item.textContent = `${a.nome} - ${a.servico} - ${a.data} às ${a.hora}`;
+    lista.appendChild(item);
+  });
 }
 
-// Bloquear datas passadas e dias de folga
-window.addEventListener("DOMContentLoaded", function () {
-  const campoData = document.getElementById("dataAgendamento");
+// --- Função para atualizar o calendário e marcar folgas ---
+function atualizarCalendario() {
+  const calendario = document.getElementById('calendario');
+  if (!calendario) return;
 
-  // Define a data mínima como hoje
-  const hoje = new Date().toISOString().split("T")[0];
-  campoData.setAttribute("min", hoje);
+  // Exemplo simples: lista de próximos 30 dias
+  calendario.innerHTML = '';
+  const folgas = carregarFolgas();
+  const hoje = new Date();
 
-  // Quando a cliente escolher uma data, bloqueia se for dia de folga
-  campoData.addEventListener("input", function () {
-    const dataSelecionada = new Date(this.value);
-    const diaSemana = dataSelecionada.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+  for (let i = 0; i < 30; i++) {
+    const dia = new Date();
+    dia.setDate(hoje.getDate() + i);
+    const diaStr = dia.toISOString().split('T')[0];
 
-    // Lista de dias bloqueados: Domingo (0) e Segunda (1)
-    const diasDeFolga = [0, 1];
+    const btn = document.createElement('button');
+    btn.textContent = diaStr;
+    btn.style.margin = '3px';
 
-    if (diasDeFolga.includes(diaSemana)) {
-      alert("Neste dia você está de folga. Por favor, escolha outro dia.");
-      this.value = ""; // Limpa a data
+    if (folgas.includes(diaStr)) {
+      btn.style.backgroundColor = '#f08080'; // vermelho claro para folga
+      btn.disabled = true;
+      btn.title = 'Folga';
+    } else {
+      btn.style.backgroundColor = '#90ee90'; // verde claro para disponível
+      btn.disabled = false;
+      btn.title = 'Disponível';
+      btn.onclick = () => {
+        if (confirm(`Deseja adicionar folga para o dia ${diaStr}?`)) {
+          adicionarFolga(diaStr);
+        }
+      };
     }
-  });
+    calendario.appendChild(btn);
+  }
+}
+
+// --- Inicialização ---
+document.addEventListener('DOMContentLoaded', () => {
+  atualizarCalendario();
+  atualizarListaAgendamentos();
+
+  // Exemplo: formulário simples para adicionar agendamento
+  const form = document.getElementById('form-agendamento');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nome = form.elements['nome'].value.trim();
+      const servico = form.elements['servico'].value;
+      const data = form.elements['data'].value;
+      const hora = form.elements['hora'].value;
+
+      if (!nome || !data || !hora) {
+        alert('Preencha todos os campos!');
+        return;
+      }
+
+      const sucesso = adicionarAgendamento({ nome, servico, data, hora });
+      if (sucesso) {
+        form.reset();
+      }
+    });
+  }
 });
