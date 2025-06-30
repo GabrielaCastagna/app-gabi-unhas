@@ -42,3 +42,26 @@ function selecionarHorario(horario) {
   document.getElementById("horarios").style.display = "none";
   document.getElementById("confirmacao").style.display = "block";
 }
+
+// Bloquear datas passadas e dias de folga
+window.addEventListener("DOMContentLoaded", function () {
+  const campoData = document.getElementById("dataAgendamento");
+
+  // Define a data mínima como hoje
+  const hoje = new Date().toISOString().split("T")[0];
+  campoData.setAttribute("min", hoje);
+
+  // Quando a cliente escolher uma data, bloqueia se for dia de folga
+  campoData.addEventListener("input", function () {
+    const dataSelecionada = new Date(this.value);
+    const diaSemana = dataSelecionada.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+
+    // Lista de dias bloqueados: Domingo (0) e Segunda (1)
+    const diasDeFolga = [0, 1];
+
+    if (diasDeFolga.includes(diaSemana)) {
+      alert("Neste dia você está de folga. Por favor, escolha outro dia.");
+      this.value = ""; // Limpa a data
+    }
+  });
+});
