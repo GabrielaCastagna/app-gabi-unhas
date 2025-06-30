@@ -9,6 +9,16 @@ const servicos = {
 
 let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
 
+// Defina as datas de folga aqui no formato "YYYY-MM-DD"
+const diasDeFolga = ["2025-07-04", "2025-07-10", "2025-07-15"];
+
+// Inicializa o flatpickr no input data, bloqueando as folgas
+flatpickr("#data", {
+  dateFormat: "Y-m-d",
+  disable: diasDeFolga,
+  minDate: "today"
+});
+
 function gerarHorariosBloqueados(horarioInicial, duracao) {
   const bloqueados = [];
   let [hora, minuto] = horarioInicial.split(":").map(Number);
@@ -32,6 +42,11 @@ function temConflito(horariosNovos, dataSelecionada) {
 }
 
 function salvarAgendamento(nome, servico, horario, data) {
+  if (diasDeFolga.includes(data)) {
+    alert("Neste dia estou de folga, por favor escolha outra data.");
+    return;
+  }
+
   const duracao = servicos[servico];
   const horariosBloqueados = gerarHorariosBloqueados(horario, duracao);
 
@@ -67,4 +82,3 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarAgendamento(nome, servico, horario, data);
   });
 });
-
