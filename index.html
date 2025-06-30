@@ -1,93 +1,244 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Serviços de Unhas - Gabriela</title>
+  <meta charset="UTF-8" />
+  <title>Agendamento Gabriela Unhas</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #fff0f5;
       padding: 20px;
+      max-width: 600px;
+      margin: auto;
       text-align: center;
     }
-
     h1 {
       color: #c71585;
     }
-
-    .servicos {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 30px;
-    }
-
-    .servico {
-      background-color: white;
-      border-radius: 20px;
-      padding: 15px;
-      width: 160px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .servico img {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 10px;
-    }
-
-    .servico h3 {
-      margin: 5px 0;
-      color: #800080;
-    }
-
-    .preco {
+    #calendario button {
+      margin: 3px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
       font-weight: bold;
-      color: #444;
+    }
+    #calendario button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    form {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+    form input, form select, form button {
+      padding: 8px 10px;
+      width: 80%;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    form button {
+      background-color: #c71585;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    form button:hover {
+      background-color: #a10e62;
+    }
+    #lista-agendamentos {
+      margin-top: 30px;
+      text-align: left;
+      padding: 0;
+      list-style: none;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
+    }
+    #lista-agendamentos li {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    #lista-agendamentos li:last-child {
+      border-bottom: none;
     }
   </style>
 </head>
 <body>
-  <h1>Serviços da Gabriela 💅</h1>
 
-  <div class="servicos">
-    <div class="servico">
-      <img src="img/icon-mao.png" alt="Mão">
-      <h3>Mão</h3>
-      <div class="preco">R$ 25,00</div>
-    </div>
+  <h1>Agendamento Gabriela Unhas</h1>
 
-    <div class="servico">
-      <img src="img/icon-pe.png" alt="Pé">
-      <h3>Pé</h3>
-      <div class="preco">R$ 25,00</div>
-    </div>
+  <h2>Calendário de Folgas</h2>
+  <div id="calendario"></div>
 
-    <div class="servico">
-      <img src="img/icon-pe-mao.png" alt="Pé e Mão">
-      <h3>Pé + Mão</h3>
-      <div class="preco">R$ 45,00</div>
-    </div>
+  <h2>Faça seu Agendamento</h2>
+  <form id="form-agendamento">
+    <input type="text" name="nome" placeholder="Seu nome" required />
+    <select name="servico" required>
+      <option value="" disabled selected>Selecione um serviço</option>
+      <option value="Mão">Mão</option>
+      <option value="Pé">Pé</option>
+      <option value="Pé + Mão">Pé + Mão</option>
+      <option value="Esmalte em Gel">Esmalte em Gel</option>
+      <option value="Blindagem">Blindagem</option>
+      <option value="Spa dos Pés">Spa dos Pés</option>
+    </select>
+    <input type="date" name="data" required />
+    <input type="time" name="hora" required />
+    <button type="submit">Agendar</button>
+  </form>
 
-    <div class="servico">
-      <img src="img/icon-esmalte-gel.png" alt="Esmalte em Gel">
-      <h3>Esmalte em Gel</h3>
-      <div class="preco">R$ 35,00</div>
-    </div>
+  <h2>Agendamentos Confirmados</h2>
+  <ul id="lista-agendamentos">
+    <li>Carregando agendamentos...</li>
+  </ul>
 
-    <div class="servico">
-      <img src="img/icon-blindagem.png" alt="Blindagem">
-      <h3>Blindagem</h3>
-      <div class="preco">R$ 40,00</div>
-    </div>
+  <script>
+    const diasFolgaKey = 'diasFolga';
+    const agendamentosKey = 'agendamentos';
 
-    <div class="servico">
-      <img src="img/icon-spa-pes.png" alt="Spa dos Pés">
-      <h3>Spa dos Pés</h3>
-      <div class="preco">R$ 30,00</div>
-    </div>
-  </div>
+    function carregarFolgas() {
+      const folgas = localStorage.getItem(diasFolgaKey);
+      return folgas ? JSON.parse(folgas) : [];
+    }
+
+    function salvarFolgas(folgas) {
+      localStorage.setItem(diasFolgaKey, JSON.stringify(folgas));
+    }
+
+    function adicionarFolga(data) {
+      let folgas = carregarFolgas();
+      if (!folgas.includes(data)) {
+        folgas.push(data);
+        salvarFolgas(folgas);
+        alert(`Folga adicionada para o dia ${data}`);
+      } else {
+        alert('Esse dia já está marcado como folga.');
+      }
+      atualizarCalendario();
+    }
+
+    function carregarAgendamentos() {
+      const agendamentos = localStorage.getItem(agendamentosKey);
+      return agendamentos ? JSON.parse(agendamentos) : [];
+    }
+
+    function salvarAgendamentos(agendamentos) {
+      localStorage.setItem(agendamentosKey, JSON.stringify(agendamentos));
+    }
+
+    function adicionarAgendamento(agendamento) {
+      let agendamentos = carregarAgendamentos();
+      let folgas = carregarFolgas();
+
+      if (folgas.includes(agendamento.data)) {
+        alert('Não é possível agendar neste dia, pois é folga.');
+        return false;
+      }
+
+      let conflito = agendamentos.some(a => a.data === agendamento.data && a.hora === agendamento.hora);
+      if (conflito) {
+        alert('Horário já está ocupado.');
+        return false;
+      }
+
+      agendamentos.push(agendamento);
+      salvarAgendamentos(agendamentos);
+      alert('Agendamento confirmado!');
+      atualizarListaAgendamentos();
+      return true;
+    }
+
+    function atualizarListaAgendamentos() {
+      const lista = document.getElementById('lista-agendamentos');
+      if (!lista) return;
+
+      const agendamentos = carregarAgendamentos();
+      lista.innerHTML = '';
+
+      if (agendamentos.length === 0) {
+        lista.innerHTML = '<li>Não há agendamentos.</li>';
+        return;
+      }
+
+      agendamentos.forEach(a => {
+        const item = document.createElement('li');
+        item.textContent = `${a.nome} - ${a.servico} - ${a.data} às ${a.hora}`;
+        lista.appendChild(item);
+      });
+    }
+
+    function atualizarCalendario() {
+      const calendario = document.getElementById('calendario');
+      if (!calendario) return;
+
+      calendario.innerHTML = '';
+      const folgas = carregarFolgas();
+      const hoje = new Date();
+
+      for (let i = 0; i < 30; i++) {
+        const dia = new Date();
+        dia.setDate(hoje.getDate() + i);
+        const diaStr = dia.toISOString().split('T')[0];
+
+        const btn = document.createElement('button');
+        btn.textContent = diaStr;
+        btn.style.margin = '3px';
+
+        if (folgas.includes(diaStr)) {
+          btn.style.backgroundColor = '#f08080'; // vermelho claro para folga
+          btn.disabled = true;
+          btn.title = 'Folga';
+        } else {
+          btn.style.backgroundColor = '#90ee90'; // verde claro para disponível
+          btn.disabled = false;
+          btn.title = 'Disponível';
+          btn.onclick = () => {
+            if (confirm(`Deseja adicionar folga para o dia ${diaStr}?`)) {
+              adicionarFolga(diaStr);
+            }
+          };
+        }
+        calendario.appendChild(btn);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      atualizarCalendario();
+      atualizarListaAgendamentos();
+
+      const form = document.getElementById('form-agendamento');
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const nome = form.elements['nome'].value.trim();
+          const servico = form.elements['servico'].value;
+          const data = form.elements['data'].value;
+          const hora = form.elements['hora'].value;
+
+          if (!nome || !data || !hora || !servico) {
+            alert('Preencha todos os campos!');
+            return;
+          }
+
+          const sucesso = adicionarAgendamento({ nome, servico, data, hora });
+          if (sucesso) {
+            form.reset();
+          }
+        });
+      }
+    });
+  </script>
+
 </body>
 </html>
 
